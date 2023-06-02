@@ -1,0 +1,33 @@
+.button {
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: 25pt;
+    font-weight: 500;
+    border-radius: 50px;
+    padding: 17px 48px;
+    margin-top: 8%;
+    color: white;
+    background-color: black;
+    text-transform: uppercase;
+    align-items: center;
+    z-index: 3;
+    transition-duration: 0.4s;
+    &:hover {
+        color: black;
+        background-color: white;
+    }
+}
+.button--transform {
+    position: fixed;
+    opacity: 0.5;
+    left: 85%;
+    top: 75%;
+    &:hover {
+        opacity: 1;
+    }
+}

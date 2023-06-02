@@ -1,0 +1,21 @@
+.promo {
+    background-image: url('../../../resources/img/promo_background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.promoText {
+    margin-top: 10%;
+    padding-left: 20%;
+    padding-right: 20%;
+}
+h1 {
+    font-size: 72px;
+    font-weight: 500;
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+}

@@ -1,0 +1,17 @@
+header {
+    height: 200px;
+    font-size: 26px;
+    text-transform: uppercase;
+    padding: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .headerMenu {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 40%;
+    }
+}

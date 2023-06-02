@@ -1,0 +1,12 @@
+.admin_clients {
+    background: rgb(8, 9, 10);
+    background: linear-gradient(rgba(33, 37, 39, 1) 0%, rgba(8, 9, 10, 1) 100%);
+}
+
+.admin_clients_content {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

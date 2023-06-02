@@ -1,0 +1,101 @@
+.barbers_form {
+    position: relative;
+
+    h1 {
+        font-size: 56px;
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+
+    h3 {
+        margin-top: 10px;
+    }
+
+    h4 {
+        font-style: italic;
+    }
+}
+
+
+.selected_barber_container {
+    h3 {
+        margin-top: 10px;
+        font-size: 20px;
+    }
+
+    padding-top: 10px;
+}
+
+.barbers_cards_container {
+    display: flex;
+    justify-content: center;
+}
+
+.barber_card {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: 25%;
+    overflow: visible;
+    background: none;
+    transition-duration: 0.2s;
+
+    & div {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    & p {
+        color: white;
+        font-size: 14px;
+        opacity: 0.8;
+    }
+
+    & .portrait_photo:hover {
+        box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.3);
+    }
+}
+
+.barber_card_selected {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: 25%;
+    overflow: visible;
+    background: none;
+
+    & div {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    & p {
+        color: white;
+        font-size: 14px;
+    }
+
+    & .portrait_photo {
+        box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.5);
+    }
+}
+
+.portrait_photo {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.barber_mini_photo {
+    width: 100%;
+    height: auto;
+}

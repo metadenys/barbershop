@@ -1,0 +1,138 @@
+.booking {
+    background: rgb(8, 9, 10);
+    background: linear-gradient(rgba(33, 37, 39, 1) 0%, rgba(8, 9, 10, 1) 100%);
+}
+
+.booking_content {
+    background-image: url('../../resources/img/booking_background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.navbar_book {
+    padding-top: 15px;
+    position: fixed;
+    width: 100%;
+    height: 10vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: transform 0.4s ease;
+    z-index: 2;
+}
+
+
+.navbar_book_container {
+    position: relative;
+    padding: 0 15%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.logo_book_container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.nav_book_title_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 2%;
+}
+
+.nav_book_title {
+    text-align: center;
+    white-space: nowrap;
+    color: white;
+    font-size: 24px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.nav_book_items {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4%;
+
+    a {
+        font-size: 22px;
+        text-decoration: underline;
+    }
+}
+
+.form_container {
+    width: 80%;
+    height: 100%;
+    padding-top: 15vh;
+    text-align: center;
+    color: white;
+}
+
+.booking_buttons_container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.booking_button_container {
+    width: 40%;
+}
+
+.booking_button_next {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: 500;
+    border-radius: 50px;
+    padding: 17px 48px;
+    margin-top: 8%;
+    color: white;
+    background-color: black;
+    text-transform: uppercase;
+    align-items: center;
+    z-index: 3;
+    transition-duration: 0.4s;
+
+    &:disabled {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    &:hover {
+        color: black;
+        background-color: white;
+    }
+}
+
+.booking_button_previous {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: 500;
+    border-radius: 50px;
+    padding: 17px 48px;
+    margin-top: 8%;
+    color: white;
+    background-color: black;
+    text-transform: uppercase;
+    align-items: center;
+    z-index: 3;
+    transition-duration: 0.4s;
+
+    &:hover {
+        color: black;
+        background-color: white;
+    }
+}

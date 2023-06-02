@@ -1,0 +1,38 @@
+.datetime_form {
+    height: 100%;
+    width: 100%;
+
+    h1 {
+        font-size: 56px;
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+
+    h2 {
+        font-size: 56px;
+        margin-top: 2%;
+        margin-bottom: 2%;
+        padding: 0;
+    }
+}
+
+.datepicker_container {
+    display: flex;
+    justify-content: center;
+    height: 25%;
+}
+
+.timepicker_container {
+    display: flex;
+    justify-content: center;
+    height: 25%;
+}
+
+.selected_datetime_container {
+    h3 {
+        margin-top: 10px;
+        font-size: 20px;
+    }
+
+    padding-top: 10px;
+}

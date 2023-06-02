@@ -1,0 +1,52 @@
+{
+  "bookings": [
+    {
+      "barberId": "0",
+      "serviceId": "0",
+      "date": "26/05/2023",
+      "time": "18:00",
+      "totalPrice": 100,
+      "client": {
+        "name": "TEST NAME",
+        "phone": "0930000000",
+        "email": "mail@mail.com"
+      },
+      "status": "confirmed",
+      "id": "0"
+    },
+    {
+      "barberId": "1",
+      "serviceId": "2",
+      "date": "29/05/2023",
+      "time": "16:00",
+      "totalPrice": 150,
+      "client": {
+        "name": "ZAHRAI DENYS",
+        "phone": "0937540055",
+        "email": "denzagray@gmail.com"
+      },
+      "status": "unconfirmed",
+      "id": "S5YJV7k"
+    },
+    {
+      "barberId": "3",
+      "serviceId": "1",
+      "date": "30/05/2023",
+      "time": "14:00",
+      "totalPrice": 280,
+      "client": {
+        "name": "ZAHRAI DENYS",
+        "phone": "0937540055",
+        "email": "denzagray@gmail.com"
+      },
+      "status": "unconfirmed",
+      "id": "yhds8nU"
+    }
+  ],
+  "admins": [
+    {
+      "login": "admin",
+      "password": "1111"
+    }
+  ]
+}
