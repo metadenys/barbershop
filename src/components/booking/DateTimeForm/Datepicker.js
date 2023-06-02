@@ -4,7 +4,6 @@ import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
 import uk from "date-fns/locale/uk";
 import "react-datepicker/dist/react-datepicker.css";
-import "react-datepicker/dist/react-datepicker.css";
 import "./datepicker.scss"
 
 registerLocale("uk", uk);

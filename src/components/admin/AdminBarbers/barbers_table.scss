@@ -53,11 +53,25 @@
         padding: 7px;
         text-transform: uppercase;
     }
+
+    td {
+        div {
+            margin: 5px auto;
+        }
+    }
+}
+
+.miniphoto_wrapper {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    overflow: hidden;
+    border-radius: 50%;
 }
 
 .barber_miniphoto {
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    height: auto;
 }
 
 .rank_gold {
@@ -73,4 +87,107 @@
 .rank_platinum {
     color: #E5E4E2;
     text-transform: capitalize;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+
+.modal {
+    overflow: visible;
+    width: 600px;
+    height: 400px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+    z-index: 10000;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    form {
+        padding: 0 50px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+}
+
+.add_barber_form {
+    height: 200px;
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.barber_add_input {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+
+    font-size: 18px;
+
+    input {
+        width: 250px;
+        height: 25px;
+    }
+    select {
+        width: 250px;
+        height: 25px;
+    }
+    textarea {
+        width: 250px;
+        height: 70px;
+        resize: none;
+    }
+}
+
+.add_barber_modal_buttons {
+    gap: 2%;
+    padding-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.add_barber_button {
+    outline: none;
+    border: solid 2px rgba(255, 255, 255, 1);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 13px 20px;
+    margin-top: 2%;
+    color: white;
+    background-color: rgb(0, 0, 0);
+    text-transform: uppercase;
+    align-items: center;
+    transition-duration: 0.4s;
+
+    &:hover {
+        color: black;
+        background-color: rgb(255, 255, 255);
+        border-color: rgb(0, 0, 0);
+    }
+}
+
+.add_barber_form_title {
+    font-size: 22px;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 10px;
 }

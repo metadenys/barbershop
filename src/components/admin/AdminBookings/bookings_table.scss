@@ -133,9 +133,10 @@
         border-color: rgb(255, 0, 0);
     }
 }
+
 .table_row {
     transition-duration: 0.3s;
-    
+
     &:hover {
         background-color: rgba($color: #fff, $alpha: 0.05);
     }
@@ -156,4 +157,34 @@
 
 .status_cancelled {
     color: gray
+}
+
+.datepicker_box_admin {
+    margin-top: 2%;
+    width: fit-content;
+    height: 100%;
+    position: relative;
+    align-items: center;
+}
+
+.custom_datepicker_admin {
+    cursor: pointer;
+    font-size: 18px;
+    text-align: center;
+    border: solid 2px rgba(255, 255, 255, 1);
+    padding: 13px 0px;
+    color: white;
+    background-color: rgb(0, 0, 0);
+    text-transform: uppercase;
+    align-items: center;
+    transition-duration: 0.4s;
+
+    &:hover {
+        color: black;
+        background-color: rgb(255, 255, 255);
+    }
+
+    &:focus {
+        outline: none;
+    }
 }

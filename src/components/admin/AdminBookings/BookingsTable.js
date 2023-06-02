@@ -1,10 +1,16 @@
 import './bookings_table.scss';
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { useTable } from "react-table";
+import DatePicker from "react-datepicker";
+import { registerLocale } from "react-datepicker";
+import uk from "date-fns/locale/uk";
+import "react-datepicker/dist/react-datepicker.css";
+
+registerLocale("uk", uk);
 
 const useOutsideClick = (ref, callback, ...additionalRefs) => {
     const handleClick = e => {
-        if (ref.current && 
+        if (ref.current &&
             !ref.current.contains(e.target) &&
             !additionalRefs.some(ref => ref.current && ref.current.contains(e.target))) {
             callback();
@@ -46,6 +52,19 @@ const testDataBookings = [
             "phone": "0930000001"
         },
         status: "unconfirmed"
+    },
+    {
+        id: "15634",
+        barberName: "Arthur",
+        serviceName: "ServiceName2",
+        date: "26/05/2023",
+        time: "18:00",
+        totalPrice: 100,
+        client: {
+            "name": "TEST NAME2",
+            "phone": "0930000001"
+        },
+        status: "cancelled"
     },
     {
         id: "15634",
@@ -159,7 +178,7 @@ function BookingsTable() {
             setButtonStyleCancel({ display: 'none' })
             setButtonStyleConfirm({ display: 'none' })
         }
-    }, [selectedBookingId]);
+    }, [selectedBookingId, selectedBookingStatus]);
 
     function onClickEvent(values) {
         if (values.status !== "cancelled") {
@@ -170,27 +189,42 @@ function BookingsTable() {
             setSelectedBookingId(null)
         }
     }
+
+    
+    
+    const tableRef = useRef()
+    const buttonsRef = useRef()
+    
+    const handleClickOutside = () => {
+        setSelectedBookingId(null)
+    }
+    
+    useOutsideClick(tableRef, handleClickOutside, buttonsRef)
+    
+    //Date picker and buttons functions
+    const [selectedDate, setSelectedDate] = useState(new Date());
     
     function onClickRefresh() {
         console.log('Refresh data')
     }
-
     function onClickConfirm() {
         console.log({ status: 'confirmed', id: selectedBookingId })
+        onClickRefresh()
     }
     
     function onClickCancel() {
         console.log({ status: 'cancelled', id: selectedBookingId })
+        onClickRefresh()
     }
 
-    const tableRef = useRef()
-    const buttonsRef = useRef()
-
-    const handleClickOutside = () => {
-        setSelectedBookingId(null)
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+        onClickRefresh();
     }
 
-    useOutsideClick(tableRef, handleClickOutside, buttonsRef)
+    const filterSunday = (date) => {
+        return date.getDay() !== 0;
+    }
 
     return (
         <div className='admin_bookings_table'>
@@ -210,12 +244,24 @@ function BookingsTable() {
                     <tbody {...getTableBodyProps()} className='tbody_styles'>
                         {rows?.map((row) => {
                             prepareRow(row)
-                            return <BookingTableRow row={row} onClickEvent={onClickEvent} setSelectedBookingId={setSelectedBookingId} buttonsRef={buttonsRef}/>
+                            return <BookingTableRow row={row} onClickEvent={onClickEvent} setSelectedBookingId={setSelectedBookingId} buttonsRef={buttonsRef} />
                         })}
                     </tbody>
                 </table>
             </div>
             <div className='table_buttons_container' ref={buttonsRef}>
+                <div className="datepicker_box_admin">
+                    <DatePicker
+                        className="custom_datepicker_admin"
+                        popperClassName="custom-popper"
+                        locale="uk"
+                        dateFormat="dd/MM/yyyy"
+                        placeholderText="Виберіть дату..."
+                        selected={selectedDate}
+                        onChange={handleDateChange}
+                        filterDate={filterSunday}
+                    />
+                </div>
                 <button className='table_button' onClick={onClickRefresh}>Оновити</button>
                 <button className='table_button_confirm' style={buttonStyleConfirm} onClick={onClickConfirm}>Підтвердити</button>
                 <button className='table_button_cancel' style={buttonStyleCancel} onClick={onClickCancel}>Скасувати</button>
