@@ -1,10 +1,11 @@
 import "./services_form.scss";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from 'axios';
 
 const coefs = {
-  silver: 1,
-  gold: 1.2,
-  platinum: 1.4
+  Silver: 1,
+  Gold: 1.2,
+  Platinum: 1.4
 }
 
 function ServicesForm({ setFieldValue, values, handleNextStep, handlePreviusStep }) {
@@ -14,12 +15,31 @@ function ServicesForm({ setFieldValue, values, handleNextStep, handlePreviusStep
     return price * coefs[barberRank];
   }
 
-  const servicesData = [
-    { id: '1', name: 'Чоловіча стрижка', price: 200, icon: "./assets/icons/struzhka_icon.png" },
-    { id: '2', name: 'Стрижка машинкою', price: 150, icon: "./assets/icons/machine_icon.png" },
-    { id: '3', name: 'Гоління', price: 150, icon: "./assets/icons/golinya_icon.png" },
-    { id: '4', name: 'Професійна укладка', price: 100, icon: "./assets/icons/ukladka_icon.png" },
-  ];
+  const [servicesData, setServicesData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://localhost:5001/api/v1/services');
+
+        if (Array.isArray(response.data.data)) {
+          const transformedData = response.data.data.map(service => ({
+            id: service.id.toString(),
+            name: service.title,
+            price: service.price,
+            icon: service.logoUrl,
+          }));
+          setServicesData(transformedData);
+        } else {
+          console.error('Invalid data format received:', response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching services:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSelectService = (service) => {
     setFieldValue("service", service)

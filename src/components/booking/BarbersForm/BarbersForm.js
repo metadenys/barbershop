@@ -1,12 +1,38 @@
 import "./barbers_form.scss";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
 
 function BarbersForm({ setFieldValue, values, handleNextStep }) {
 
-  const barbersData = [
-    { id: '1', name: 'Максим', bio: '"Працюю барбером вже 3 роки"', rank: "silver", photo: "./assets/img/first_barber.jpg" },
-    { id: '2', name: 'Денис', bio: '"Зі мною можна поговорити"', rank: "gold", photo: "./assets/img/second_barber.jpg" },
-    { id: '3', name: 'Артур', bio: '"Доповню ваш образ гарною зачіскою"', rank: "platinum", photo: "./assets/img/third_barber.jpg" },
-  ];
+  // const barbersData = [
+  //   { id: '1', name: 'Максим', bio: '"Працюю барбером вже 3 роки"', rank: "silver", photo: "./assets/img/first_barber.jpg" },
+  //   { id: '2', name: 'Денис', bio: '"Зі мною можна поговорити"', rank: "gold", photo: "./assets/img/second_barber.jpg" },
+  //   { id: '3', name: 'Артур', bio: '"Доповню ваш образ гарною зачіскою"', rank: "platinum", photo: "./assets/img/third_barber.jpg" },
+  // ];
+
+  const [barbersData, setBarbersData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://localhost:5001/api/v1/barbers');
+        const transformedData = response.data.data.map(barber => ({
+          id: barber.id.toString(),
+          name: barber.firstName,
+          bio: barber.description,
+          rank: barber.rank.status,
+          photo: barber.photoUrl,
+        }));
+        console.log(transformedData);
+        setBarbersData(transformedData);
+      } catch (error) {
+        console.error('Error fetching barbers:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSelectBarber = (barber) => {
     setFieldValue("barber", barber);
