@@ -42,10 +42,18 @@ function AddBarberModal() {
             .max(50, 'Ім\'я занадто довге!')
             .required('*Обов\'язкове поле'),
         rank: Yup.string()
-            .min(2, 'Ім\'я занадто коротке!')
-            .max(50, 'Ім\'я занадто довге!')
+            .required('*Обов\'язкове поле'),
+        photo: Yup.mixed()
+            .required("*Обов'язкове поле"),
+        bio: Yup.string()
+            .min(4, 'Опис занадто короткий!')
+            .max(50, 'Опис занадто довгий!')
             .required('*Обов\'язкове поле')
     });
+
+    const PhotoInputComponent = (props) => (
+        <input className="add_barber_photo_input" type="file" {...props} accept="image/png, image/jpeg"/>
+    );
 
     return (
         <div>
@@ -59,11 +67,12 @@ function AddBarberModal() {
                                 name: '',
                                 rank: '',
                                 bio: '',
-                                photo: null,
+                                photo: undefined,
                             }}
                             onSubmit={async (values) => {
                                 await new Promise((r) => setTimeout(r, 500));
                                 alert(JSON.stringify(values, null, 2));
+                                closeWindow();
                             }}
                             validationSchema={validationSchema}
                         >
@@ -75,7 +84,7 @@ function AddBarberModal() {
                                             <label htmlFor="name">Ім'я барбера:</label>
                                             <Field type="text" id="name" name="name" />
                                         </div>
-                                        <ErrorMessage name="name" component="div" className="error" />
+                                        <ErrorMessage name="name" component="div" className="error_add_barber" />
                                     </div>
 
                                     <div>
@@ -88,15 +97,15 @@ function AddBarberModal() {
                                                 <option value="Platinum">Platinum</option>
                                             </Field>
                                         </div>
-                                        <ErrorMessage name="rank" component="div" className="error" />
+                                        <ErrorMessage name="rank" component="div" className="error_add_barber" />
                                     </div>
 
                                     <div>
                                         <div className='barber_add_input'>
                                             <label htmlFor="photo">Фото:</label>
-                                            <Field type="file" id="photo" name="photo" />
+                                            <Field name="photo" id="photo" as={PhotoInputComponent}/>
                                         </div>
-                                        <ErrorMessage name="photo" component="div" className="error" />
+                                        <ErrorMessage name="photo" component="div" className="error_add_barber" />
                                     </div>
 
                                     <div>
@@ -104,7 +113,7 @@ function AddBarberModal() {
                                             <label htmlFor="bio">Опис:</label>
                                             <Field as="textarea" id="bio" name="bio" />
                                         </div>
-                                        <ErrorMessage name="bio" component="div" className="error" />
+                                        <ErrorMessage name="bio" component="div" className="error_add_barber" />
                                     </div>
                                 </div>
 
