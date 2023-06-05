@@ -41,6 +41,20 @@
       },
       "status": "unconfirmed",
       "id": "yhds8nU"
+    },
+    {
+      "barberId": "2",
+      "serviceId": "2",
+      "date": "05/06/2023",
+      "time": "10:00",
+      "totalPrice": 180,
+      "client": {
+        "name": "ZAHRAI DENYS",
+        "phone": "0937540055",
+        "email": "denzagray@gmail.com"
+      },
+      "status": "unconfirmed",
+      "id": "jBplOL9"
     }
   ],
   "admins": [

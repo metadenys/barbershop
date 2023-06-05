@@ -1,7 +1,13 @@
 import "./finish_form.scss";
 import { Field, ErrorMessage } from 'formik';
+import dayjs from "dayjs";
 
 function FinishForm({ values, handlePreviusStep }) {
+
+  const getDateFormatted = (date) => {
+    const formattedDate = dayjs(date).format('DD/MM/YYYY');
+    return formattedDate
+  }
 
   return (
     <div className="finish_form">
@@ -31,13 +37,13 @@ function FinishForm({ values, handlePreviusStep }) {
             <h3>Вибраний барбер:</h3>
             <div><span className="barber_rank_span">{values.barber.rank}</span> {values.barber.name}</div>
             <h3>Вибрана послуга:</h3>
-            <div>{values.service.name}</div>
+            <div>{values.service.title}</div>
           </div>
           <div className="selected_options_subcontainer">
             <h3>Ціна:</h3>
             <div>{values.total}</div>
             <h3>Вибрані дата й час:</h3>
-            <div>{values.date} {values.time}</div>
+            <div>{getDateFormatted(values.date)} {values.time}</div>
           </div>
         </div>
       )}

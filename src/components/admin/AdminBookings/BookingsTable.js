@@ -1,12 +1,32 @@
 import './bookings_table.scss';
+import "react-datepicker/dist/react-datepicker.css";
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { useTable } from "react-table";
-import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
+import DatePicker from "react-datepicker";
 import uk from "date-fns/locale/uk";
-import "react-datepicker/dist/react-datepicker.css";
+import axios from 'axios';
+import dayjs from 'dayjs';
+import 'dayjs/locale/uk';
 
 registerLocale("uk", uk);
+
+function formatDateToUkrainian(dateString) {
+    const formattedDate = dayjs(dateString).locale('uk').format('DD/MM/YYYY HH:mm');
+    return formattedDate;
+}
+
+function formatStatus(status) {
+    let statusTitle = ""
+    if (status === 0) {
+        return statusTitle = 'Не підтверджено'
+    } else if (status === 1) {
+        return statusTitle = 'Підтверджено'
+    } else if (status === 2) {
+        return statusTitle = 'Скасовано'
+    }
+    return 'error';
+}
 
 const useOutsideClick = (ref, callback, ...additionalRefs) => {
     const handleClick = e => {
@@ -25,7 +45,7 @@ const useOutsideClick = (ref, callback, ...additionalRefs) => {
         };
     });
 };
-
+/*
 const testDataBookings = [
     {
         id: "12315",
@@ -80,14 +100,24 @@ const testDataBookings = [
         status: "cancelled"
     }
 ]
-
+*/
 function BookingTableRow({ row, onClickEvent, buttonsRef }) {
 
     function isStatus(value) {
-        if (value === "confirmed" || value === "unconfirmed" || value === "cancelled") {
+        if (value === "Підтверджено" || value === "Не підтверджено" || value === "Скасовано") {
             return true
         } else {
             return false;
+        }
+    }
+
+    function classFormatting(value) {
+        if (value === "Підтверджено"){
+            return "confirmed"
+        } else if (value === "Не підтверджено") {
+            return "unconfirmed";
+        } else if(value === "Скасовано") {
+            return "cancelled"
         }
     }
 
@@ -109,7 +139,7 @@ function BookingTableRow({ row, onClickEvent, buttonsRef }) {
     return (
         <tr ref={rowRef} {...row.getRowProps()} onClick={handleClick} className={isActive ? "table_row_active" : "table_row"}>
             {row.cells.map((cell) => (
-                <td {...cell.getCellProps()} className={isStatus(cell.value) ? `status_${cell.value}` : undefined}>
+                <td {...cell.getCellProps()} className={isStatus(cell.value) ? `status_${classFormatting(cell.value)}` : undefined}>
                     {cell.column.id === "id" ? row.index + 1 : cell.render("Cell")}
                 </td>
             ))}
@@ -118,7 +148,33 @@ function BookingTableRow({ row, onClickEvent, buttonsRef }) {
 }
 function BookingsTable() {
 
-    const bookingsData = useMemo(() => testDataBookings, [])
+    const [bookingsData, setBookingsData] = useState([]);
+
+    useEffect(() => {
+        const fetchBookingsData = async () => {
+            try {
+                const response = await axios.get('https://localhost:5001/api/v1/bookings'); //URL
+                const transformedData = response.data.data.map(booking => ({
+                    id: booking.id,
+                    barberName: booking.barber.firstName,
+                    serviceName: booking.service.title,
+                    dateTime: formatDateToUkrainian(booking.time),
+                    totalPrice: booking.totalPrice + "UAH",
+                    clientName: booking.client.name,
+                    clientPhone: booking.client.phoneNumber,
+                    status: formatStatus(booking.status),
+                }));
+                console.log(transformedData);
+                setBookingsData(transformedData);
+            } catch (error) {
+                console.error('Error fetching bookings:', error);
+            }
+        };
+
+        fetchBookingsData();
+    }, []);
+
+    const bookingsTableData = useMemo(() => bookingsData, [bookingsData])
 
     const columns = useMemo(() => [
         {
@@ -135,11 +191,7 @@ function BookingsTable() {
         },
         {
             Header: "Дата",
-            accessor: "date"
-        },
-        {
-            Header: "Час",
-            accessor: "time"
+            accessor: "dateTime"
         },
         {
             Header: "Ціна",
@@ -147,11 +199,11 @@ function BookingsTable() {
         },
         {
             Header: "Ім'я клієнта",
-            accessor: "client.name"
+            accessor: "clientName"
         },
         {
             Header: "Телефон клієнта",
-            accessor: "client.phone"
+            accessor: "clientPhone"
         },
         {
             Header: "Статус",
@@ -159,7 +211,7 @@ function BookingsTable() {
         }
     ], [])
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data: bookingsData });
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data: bookingsTableData });
 
     const [selectedBookingId, setSelectedBookingId] = useState()
     const [selectedBookingStatus, setSelectedBookingStatus] = useState()
@@ -168,10 +220,10 @@ function BookingsTable() {
     const [buttonStyleConfirm, setButtonStyleConfirm] = useState({ display: 'none' });
 
     useEffect(() => {
-        if (selectedBookingId && selectedBookingStatus === "confirmed") {
+        if (selectedBookingId && selectedBookingStatus === "Підтверджено") {
             setButtonStyleCancel({ display: 'block' })
             setButtonStyleConfirm({ display: 'none' })
-        } else if (selectedBookingId && selectedBookingStatus === "unconfirmed") {
+        } else if (selectedBookingId && selectedBookingStatus === "Не підтверджено") {
             setButtonStyleCancel({ display: 'block' })
             setButtonStyleConfirm({ display: 'block' })
         } else {
@@ -181,7 +233,7 @@ function BookingsTable() {
     }, [selectedBookingId, selectedBookingStatus]);
 
     function onClickEvent(values) {
-        if (values.status !== "cancelled") {
+        if (values.status !== "Скасовано") {
             setSelectedBookingId(values.id)
             setSelectedBookingStatus(values.status)
             console.log(values.id)
@@ -190,30 +242,30 @@ function BookingsTable() {
         }
     }
 
-    
-    
+
+
     const tableRef = useRef()
     const buttonsRef = useRef()
-    
+
     const handleClickOutside = () => {
         setSelectedBookingId(null)
     }
-    
+
     useOutsideClick(tableRef, handleClickOutside, buttonsRef)
-    
+
     //Date picker and buttons functions
     const [selectedDate, setSelectedDate] = useState(new Date());
-    
+
     function onClickRefresh() {
         console.log('Refresh data')
     }
     function onClickConfirm() {
-        console.log({ status: 'confirmed', id: selectedBookingId })
+        console.log({ status: 1, id: selectedBookingId })
         onClickRefresh()
     }
-    
+
     function onClickCancel() {
-        console.log({ status: 'cancelled', id: selectedBookingId })
+        console.log({ status: 2, id: selectedBookingId })
         onClickRefresh()
     }
 

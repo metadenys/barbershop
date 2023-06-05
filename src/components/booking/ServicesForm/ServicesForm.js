@@ -1,25 +1,70 @@
 import "./services_form.scss";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const coefs = {
-  silver: 1,
-  gold: 1.2,
-  platinum: 1.4
+/*
+const coefsData = {
+  Silver: 1,
+  Gold: 1.2,
+  Platinum: 1.4
 }
+*/
 
 function ServicesForm({ setFieldValue, values, handleNextStep, handlePreviusStep }) {
 
-  const getCoef = (price) => {
-    const barberRank = values.barber.rank;
-    return price * coefs[barberRank];
-  }
+  const [coefsData, setCoefsData] = useState([])
 
+  useEffect(() => {
+    const fetchCoefsData = async () => {
+      try {
+        const response = await axios.get('https://localhost:5001/api/v1/ranks');
+        setCoefsData(response.data.data)
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCoefsData();
+  }, []);
+
+  const [servicesData, setServicesData] = useState([])
+
+
+  useEffect(() => {
+    const fetchServiceData = async () => {
+      try {
+        const response = await axios.get('https://localhost:5001/api/v1/services');
+        setServicesData(response.data.data)
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchServiceData()
+  }, []);
+
+  /*
   const servicesData = [
     { id: '1', name: 'Чоловіча стрижка', price: 200, icon: "./assets/icons/struzhka_icon.png" },
     { id: '2', name: 'Стрижка машинкою', price: 150, icon: "./assets/icons/machine_icon.png" },
     { id: '3', name: 'Гоління', price: 150, icon: "./assets/icons/golinya_icon.png" },
     { id: '4', name: 'Професійна укладка', price: 100, icon: "./assets/icons/ukladka_icon.png" },
   ];
+  */
+
+  const getCoef = (price) => {
+    const barberRank = values.barber.rank;
+  
+    const rankObject = coefsData.find(rank => rank.status === barberRank);
+  
+    if (!rankObject) {
+      return 0;
+    }
+  
+    const coefficient = rankObject.coefficient;
+    return price * coefficient;
+  };
+  
 
   const handleSelectService = (service) => {
     setFieldValue("service", service)
@@ -35,11 +80,11 @@ function ServicesForm({ setFieldValue, values, handleNextStep, handlePreviusStep
     return "service_card";
   };
 
-  useEffect(() => { 
-    if(values.barber && values.service) {
-     setFieldValue("total", getCoef(values.service.price))
-}
-}, [values.barber, values.service])
+  useEffect(() => {
+    if (values.barber && values.service) {
+      setFieldValue("total", getCoef(values.service.price))
+    }
+  }, [coefsData, values.barber, values.service])
 
   return (
     <div className="services_form">
@@ -47,9 +92,9 @@ function ServicesForm({ setFieldValue, values, handleNextStep, handlePreviusStep
       <div className="services_cards_container">
         {servicesData.map((service) => (
           <div key={service.id} className={getSelectedServiceClass(service.id)} onClick={() => handleSelectService(service)}>
-            <img src={service.icon} alt="Service" draggable="false" className="service_icon" />
+            <img src={service.logoUrl} alt="Service" draggable="false" className="service_icon" />
             <div>
-              <h3>{service.name}</h3>
+              <h3>{service.title}</h3>
               <h4>Ціна: {getCoef(service.price)} UAH</h4>
             </div>
           </div>
@@ -58,7 +103,7 @@ function ServicesForm({ setFieldValue, values, handleNextStep, handlePreviusStep
       {values?.service?.id && (
         <div className="selected_service_container">
           <h3>Вибрана послуга:</h3>
-          <p>Назва послуги: {values.service.name}. Ціна: {values.total} UAH</p>
+          <p>Назва послуги: {values.service.title}. Ціна: {values.total} UAH</p>
         </div>
       )}
       <div className="booking_buttons_container">

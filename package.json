@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
+    "dayjs": "^1.11.8",
     "dotenv": "^16.0.3",
     "formik": "^2.2.9",
     "json-server": "^0.17.3",

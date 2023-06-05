@@ -3,14 +3,14 @@ import { useState } from 'react';
 import { Formik, Form } from 'formik';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import * as Yup from 'yup';
 import BarbersForm from "../../components/booking/BarbersForm/BarbersForm";
 import ServicesForm from "../../components/booking/ServicesForm/ServicesForm";
 import DateTimeForm from "../../components/booking/DateTimeForm/DateTimeForm";
-import "./booking.scss";
 import FinishForm from "../../components/booking/FinishForm/FinishForm";
+import 'react-toastify/dist/ReactToastify.css';
+import "./booking.scss";
 
 function Booking() {
 
@@ -25,23 +25,25 @@ function Booking() {
   };
 
 
-  const serverUrl = "http://localhost:3004/bookings"
+  const serverUrl = "https://localhost:5001/api/v1/bookings"
 
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
+    const [hours, minutes] = values.time.split(':');
+    const dateObj = values.date
+    dateObj.setHours(parseInt(hours));
+    dateObj.setMinutes(parseInt(minutes));
+
     const BookingData = {
+      time: dateObj,
       barberId: values.barber.id,
       serviceId: values.service.id,
-      date: values.date,
-      time: values.time,
-      totalPrice: values.total,
       client: {
         name: values.name,
-        phone: values.phone,
+        phoneNumber: values.phone,
         email: values.email
-      },
-      status: "unconfirmed"
+      }
     }
 
     const notifyError = () => toast.error("Упс!Щось пішло не так...");

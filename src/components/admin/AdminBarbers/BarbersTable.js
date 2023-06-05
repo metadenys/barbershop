@@ -26,6 +26,7 @@ const testDataBarbers = [
 ]
 
 function AddBarberModal() {
+
     const [isWindowOpen, setIsWindowOpen] = useState(false);
 
     const openWindow = () => {
@@ -52,7 +53,7 @@ function AddBarberModal() {
     });
 
     const PhotoInputComponent = (props) => (
-        <input className="add_barber_photo_input" type="file" {...props} accept="image/png, image/jpeg"/>
+        <input className="add_barber_photo_input" type="file" {...props} accept="image/png, image/jpeg, image/jpg" />
     );
 
     return (
@@ -103,7 +104,7 @@ function AddBarberModal() {
                                     <div>
                                         <div className='barber_add_input'>
                                             <label htmlFor="photo">Фото:</label>
-                                            <Field name="photo" id="photo" as={PhotoInputComponent}/>
+                                            <Field name="photo" id="photo" as={PhotoInputComponent} />
                                         </div>
                                         <ErrorMessage name="photo" component="div" className="error_add_barber" />
                                     </div>
@@ -131,6 +132,31 @@ function AddBarberModal() {
 }
 
 function BarbersTable() {
+
+    /*
+const [barbersData, setBarbersData] = useState([]);
+
+useEffect(() => {
+    const fetchBarbersData = async () => {
+    try {
+        const response = await axios.get('https://localhost:5001/api/v1/barbers');
+        const transformedData = response.data.data.map(barber => ({
+        id: barber.id.toString(),
+        name: barber.firstName,
+        bio: barber.description,
+        rank: barber.rank.status,
+        photo: barber.photoUrl,
+        }));
+        console.log(transformedData);
+        setBarbersData(transformedData);
+    } catch (error) {
+        console.error('Error fetching barbers:', error);
+    }
+    };
+
+    fetchBarbersData();
+}, []);
+*/
 
     const barbersData = useMemo(() => testDataBarbers, [])
 

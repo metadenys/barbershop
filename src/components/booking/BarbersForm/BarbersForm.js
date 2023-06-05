@@ -1,12 +1,36 @@
 import "./barbers_form.scss";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 function BarbersForm({ setFieldValue, values, handleNextStep }) {
-
+  /*
   const barbersData = [
     { id: '1', name: 'Максим', bio: '"Працюю барбером вже 3 роки"', rank: "silver", photo: "./assets/img/first_barber.jpg" },
     { id: '2', name: 'Денис', bio: '"Зі мною можна поговорити"', rank: "gold", photo: "./assets/img/second_barber.jpg" },
     { id: '3', name: 'Артур', bio: '"Доповню ваш образ гарною зачіскою"', rank: "platinum", photo: "./assets/img/third_barber.jpg" },
   ];
+  */
+  const [barbersData, setBarbersData] = useState([]);
+
+  useEffect(() => {
+    const fetchBarbersData = async () => {
+      try {
+        const response = await axios.get('https://localhost:5001/api/v1/barbers');
+        const transformedData = response.data.data.map(barber => ({
+          id: barber.id.toString(),
+          name: barber.firstName,
+          bio: barber.description,
+          rank: barber.rank.status,
+          photo: barber.photoUrl,
+        }));
+        setBarbersData(transformedData);
+      } catch (error) {
+        console.error('Error fetching barbers:', error);
+      }
+    };
+
+    fetchBarbersData();
+  }, []);
 
   const handleSelectBarber = (barber) => {
     setFieldValue("barber", barber);
@@ -17,15 +41,15 @@ function BarbersForm({ setFieldValue, values, handleNextStep }) {
   };
 
   const getCustomRankText = (param) => {
-    if (param === "silver") {
+    if (param === "Silver") {
       return {
         color: '#C0C0C0'
       }
-    } else if (param === "gold") {
+    } else if (param === "Gold") {
       return {
         color: '#FFD700'
       }
-    } else if (param === "platinum") {
+    } else if (param === "Platinum") {
       return {
         color: '#E5E4E2'
       }

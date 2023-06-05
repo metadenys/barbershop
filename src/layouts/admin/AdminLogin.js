@@ -12,6 +12,8 @@ function AdminLogin() {
             .required('*Введіть пароль'),
     });
 
+    console.log(process.env.REACT_APP_URL)
+
     return (
         <div className='admin_login'>
             <div className='admin_content'>

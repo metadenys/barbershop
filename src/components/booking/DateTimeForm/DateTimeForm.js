@@ -1,12 +1,12 @@
 import "./datetime_form.scss";
-import moment from 'moment';
 import MyDatePicker from "./Datepicker";
 import MyTimePicker from "./Timepicker";
+import dayjs from "dayjs";
 
 function DateTimeForm({ setFieldValue, values, handleNextStep, handlePreviusStep }) {
 
   const handleSelectDate = (date) => {
-    setFieldValue("date", moment(date).format("DD/MM/YYYY"));
+    setFieldValue("date", date);
     setFieldValue("time", undefined);
   };
 
@@ -14,13 +14,16 @@ function DateTimeForm({ setFieldValue, values, handleNextStep, handlePreviusStep
     setFieldValue("time", time)
   };
 
-
+  const getDateFormatted = (date) => {
+    const formattedDate = dayjs(date).format('DD/MM/YYYY');
+    return formattedDate
+  }
 
   return (
     <div className="datetime_form">
       <h1>Виберіть дату</h1>
       <div className="datepicker_container">
-        <MyDatePicker handleSelectDate={handleSelectDate} values={values}/>
+        <MyDatePicker handleSelectDate={handleSelectDate} values={values} />
       </div>
       <h2>Виберіть час</h2>
       <div className="timepicker_container">
@@ -29,7 +32,7 @@ function DateTimeForm({ setFieldValue, values, handleNextStep, handlePreviusStep
       {values?.time && values?.date && (
         <div className="selected_datetime_container">
           <h3>Вибрана дата і час:</h3>
-          <div>{values.date} {values.time}</div>
+          <div>{getDateFormatted(values.date)} {values.time}</div>
         </div>
       )}
       <div className="booking_buttons_container">

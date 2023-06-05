@@ -14,7 +14,7 @@ function Main() {
   return (
     <div className="main">
       <Navbar />
-      <MainButton value="Записатись" onClick={() => navigate('/booking')}/>
+      <MainButton value="Записатись" onClick={() => navigate('/booking')} />
       <Promo />
       <AboutUs />
       <Barbers />

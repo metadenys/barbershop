@@ -22,8 +22,7 @@ function  MyDatePicker ({ handleSelectDate, values }) {
 
     useEffect(() => { 
         if(values?.date) {
-        moment.defaultFormat='DD/MM/YYYY';
-        setSelectedDate(Date.parse(moment(values.date, moment.defaultFormat).toDate()))
+        setSelectedDate(values.date)
     }
     }, [values.date])
 
