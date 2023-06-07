@@ -3,13 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 function BarbersForm({ setFieldValue, values, handleNextStep }) {
-  /*
-  const barbersData = [
-    { id: '1', name: 'Максим', bio: '"Працюю барбером вже 3 роки"', rank: "silver", photo: "./assets/img/first_barber.jpg" },
-    { id: '2', name: 'Денис', bio: '"Зі мною можна поговорити"', rank: "gold", photo: "./assets/img/second_barber.jpg" },
-    { id: '3', name: 'Артур', bio: '"Доповню ваш образ гарною зачіскою"', rank: "platinum", photo: "./assets/img/third_barber.jpg" },
-  ];
-  */
+
   const [barbersData, setBarbersData] = useState([]);
 
   useEffect(() => {
@@ -78,7 +72,7 @@ function BarbersForm({ setFieldValue, values, handleNextStep }) {
               <div className="portrait_photo"><img src={barber.photo} alt="Barber" draggable="false" className="barber_mini_photo" /></div>
               <h3>{barber.name}</h3>
               <h4 style={getCustomRankText(barber.rank)}>{barber.rank}</h4>
-              <p>{barber.bio}</p>
+              <p>"{barber.bio}"</p>
             </div>
           </div>
         ))}

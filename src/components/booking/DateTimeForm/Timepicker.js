@@ -36,20 +36,7 @@ function MyTimePicker({ handleSelectTime, values }) {
 
         fetchHoursData(values.barber.id, moment(values.date).format('YYYY-MM-DD'));
     }, [values.date]);
-    /*
-    const bookings = [
-        { id: '1', barberId: '1', date: '01/06/2023', time: '15:00' },
-        { id: '2', barberId: '2', date: '01/06/2023', time: '16:00' },
-        { id: '3', barberId: '1', date: '01/06/2023', time: '17:00' },
-        { id: '4', barberId: '3', date: '01/06/2023', time: '12:00' },
-        { id: '5', barberId: '3', date: '01/06/2023', time: '15:00' },
-        { id: '6', barberId: '2', date: '02/06/2023', time: '17:00' },
-        { id: '7', barberId: '1', date: '02/06/2023', time: '10:00' },
-        { id: '8', barberId: '2', date: '03/06/2023', time: '11:00' },
-        { id: '9', barberId: '1', date: '03/06/2023', time: '18:00' },
-        { id: '10', barberId: '1', date: '03/06/2023', time: '19:00' },
-    ];
-    */
+
     const hours = [
         { value: "10:00", label: "10:00" },
         { value: "11:00", label: "11:00" },

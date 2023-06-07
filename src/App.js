@@ -6,8 +6,6 @@ import AdminBookings from "./layouts/admin/AdminBookings";
 import AdminBarbers from "./layouts/admin/AdminBarbers";
 import AdminClients from "./layouts/admin/AdminClients";
 import { BrowserRouter as Router, Route, Routes, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
 
 export const Loader = () => (
   <div className="loader">

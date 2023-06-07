@@ -16,14 +16,19 @@ function formatDateToUkrainian(dateString) {
     return formattedDate;
 }
 
+function formatDateToGet(date) {
+    const formattedDate = dayjs(date);
+    const formattedDateString = formattedDate.format('YYYY-MM-DD');
+    return formattedDateString;
+}
+
 function formatStatus(status) {
-    let statusTitle = ""
     if (status === 0) {
-        return statusTitle = 'Не підтверджено'
+        return 'Не підтверджено'
     } else if (status === 1) {
-        return statusTitle = 'Підтверджено'
+        return 'Підтверджено'
     } else if (status === 2) {
-        return statusTitle = 'Скасовано'
+        return 'Скасовано'
     }
     return 'error';
 }
@@ -45,62 +50,7 @@ const useOutsideClick = (ref, callback, ...additionalRefs) => {
         };
     });
 };
-/*
-const testDataBookings = [
-    {
-        id: "12315",
-        barberName: "Denys",
-        serviceName: "ServiceName1",
-        date: "26/05/2023",
-        time: "18:00",
-        totalPrice: 100,
-        client: {
-            "name": "TEST NAME1",
-            "phone": "0930000000"
-        },
-        status: "confirmed",
-    },
-    {
-        id: "23535",
-        barberName: "Arthur",
-        serviceName: "ServiceName2",
-        date: "26/05/2023",
-        time: "18:00",
-        totalPrice: 100,
-        client: {
-            "name": "TEST NAME2",
-            "phone": "0930000001"
-        },
-        status: "unconfirmed"
-    },
-    {
-        id: "15634",
-        barberName: "Arthur",
-        serviceName: "ServiceName2",
-        date: "26/05/2023",
-        time: "18:00",
-        totalPrice: 100,
-        client: {
-            "name": "TEST NAME2",
-            "phone": "0930000001"
-        },
-        status: "cancelled"
-    },
-    {
-        id: "15634",
-        barberName: "Arthur",
-        serviceName: "ServiceName2",
-        date: "26/05/2023",
-        time: "18:00",
-        totalPrice: 100,
-        client: {
-            "name": "TEST NAME2",
-            "phone": "0930000001"
-        },
-        status: "cancelled"
-    }
-]
-*/
+
 function BookingTableRow({ row, onClickEvent, buttonsRef }) {
 
     function isStatus(value) {
@@ -112,11 +62,11 @@ function BookingTableRow({ row, onClickEvent, buttonsRef }) {
     }
 
     function classFormatting(value) {
-        if (value === "Підтверджено"){
+        if (value === "Підтверджено") {
             return "confirmed"
         } else if (value === "Не підтверджено") {
             return "unconfirmed";
-        } else if(value === "Скасовано") {
+        } else if (value === "Скасовано") {
             return "cancelled"
         }
     }
@@ -148,31 +98,44 @@ function BookingTableRow({ row, onClickEvent, buttonsRef }) {
 }
 function BookingsTable() {
 
+    //Date picker and buttons functions
+    const [selectedDate, setSelectedDate] = useState(new Date());
+
     const [bookingsData, setBookingsData] = useState([]);
 
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+        
+    }
+
+    const filterSunday = (date) => {
+        return date.getDay() !== 0;
+    }
+    const fetchBookingsData = async () => {
+        try {
+            const response = await axios.get(`https://localhost:5001/api/v1/bookings/date?Date=${formatDateToGet(selectedDate)}`); //URL
+            console.log(response.data.data)
+            const transformedData = response.data.data.map(booking => ({
+                id: booking.id,
+                barberName: booking.barber.firstName,
+                serviceName: booking.service.title,
+                dateTime: formatDateToUkrainian(booking.time),
+                totalPrice: booking.totalPrice + "UAH",
+                clientName: booking.client.name,
+                clientPhone: booking.client.phoneNumber,
+                status: formatStatus(booking.status),
+            }));
+            setBookingsData(transformedData);
+        } catch (error) {
+            console.error('Error fetching bookings:', error);
+        }
+    };
+
     useEffect(() => {
-        const fetchBookingsData = async () => {
-            try {
-                const response = await axios.get('https://localhost:5001/api/v1/bookings'); //URL
-                const transformedData = response.data.data.map(booking => ({
-                    id: booking.id,
-                    barberName: booking.barber.firstName,
-                    serviceName: booking.service.title,
-                    dateTime: formatDateToUkrainian(booking.time),
-                    totalPrice: booking.totalPrice + "UAH",
-                    clientName: booking.client.name,
-                    clientPhone: booking.client.phoneNumber,
-                    status: formatStatus(booking.status),
-                }));
-                console.log(transformedData);
-                setBookingsData(transformedData);
-            } catch (error) {
-                console.error('Error fetching bookings:', error);
-            }
-        };
 
         fetchBookingsData();
-    }, []);
+
+    }, [selectedDate]);
 
     const bookingsTableData = useMemo(() => bookingsData, [bookingsData])
 
@@ -253,30 +216,39 @@ function BookingsTable() {
 
     useOutsideClick(tableRef, handleClickOutside, buttonsRef)
 
-    //Date picker and buttons functions
-    const [selectedDate, setSelectedDate] = useState(new Date());
-
     function onClickRefresh() {
+        fetchBookingsData()
         console.log('Refresh data')
     }
+
+    const patchBookingStatus = async (status) => {
+        try {
+            const statusChangeObj = {
+                Id: selectedBookingId,
+                status: status
+            }
+            await axios.patch('https://localhost:5001/api/v1/bookings/update', statusChangeObj);
+        } catch (error) {
+            console.error('Error patching booking:', error);
+        }
+    };
+
     function onClickConfirm() {
-        console.log({ status: 1, id: selectedBookingId })
-        onClickRefresh()
+        patchBookingStatus(1)
+        setSelectedBookingStatus("Підтверджено")
+        setTimeout(() => {
+            fetchBookingsData()
+        }, 500);
     }
 
     function onClickCancel() {
-        console.log({ status: 2, id: selectedBookingId })
-        onClickRefresh()
+        patchBookingStatus(2)
+        setSelectedBookingStatus("Скасовано")
+        setTimeout(() => {
+            fetchBookingsData()
+        }, 500);
     }
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-        onClickRefresh();
-    }
-
-    const filterSunday = (date) => {
-        return date.getDay() !== 0;
-    }
 
     return (
         <div className='admin_bookings_table'>

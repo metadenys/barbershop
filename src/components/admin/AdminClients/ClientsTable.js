@@ -1,7 +1,8 @@
 import './clients_table.scss';
-import {  useMemo } from 'react';
+import {  useMemo, useState, useEffect } from 'react';
+import axios from "axios";
 import { useTable } from "react-table";
-
+/*
 const testDataClients = [
     {
         name: "DENYS ZAHRAI",
@@ -129,10 +130,34 @@ const testDataClients = [
         email: "mail@mail.com"
     }
 ]
+*/
 
 function ClientsTable() {
+    
+    const [clientsResponseData, setClientsResponseData] = useState([]);
 
-    const clientsData = useMemo(() => testDataClients, [])
+    const fetchClientsData = async () => {
+        try {
+            const response = await axios.get('https://localhost:5001/api/v1/clients');
+            const transformedData = response.data.data.map(client => ({
+                id: client.id,
+                name: client.name,
+                phoneNumber: client.phoneNumber,
+                email: client.email,
+            }));
+            setClientsResponseData(transformedData);
+        } catch (error) {
+            console.error('Error fetching bookings:', error);
+        }
+    };
+
+    useEffect(() => {
+
+        fetchClientsData();
+
+    }, []);
+
+    const clientsData = useMemo(() => clientsResponseData, [clientsResponseData])
 
     const columns = useMemo(() => [
         {

@@ -2,14 +2,6 @@ import "./services_form.scss";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-/*
-const coefsData = {
-  Silver: 1,
-  Gold: 1.2,
-  Platinum: 1.4
-}
-*/
-
 function ServicesForm({ setFieldValue, values, handleNextStep, handlePreviusStep }) {
 
   const [coefsData, setCoefsData] = useState([])
@@ -42,15 +34,6 @@ function ServicesForm({ setFieldValue, values, handleNextStep, handlePreviusStep
 
     fetchServiceData()
   }, []);
-
-  /*
-  const servicesData = [
-    { id: '1', name: 'Чоловіча стрижка', price: 200, icon: "./assets/icons/struzhka_icon.png" },
-    { id: '2', name: 'Стрижка машинкою', price: 150, icon: "./assets/icons/machine_icon.png" },
-    { id: '3', name: 'Гоління', price: 150, icon: "./assets/icons/golinya_icon.png" },
-    { id: '4', name: 'Професійна укладка', price: 100, icon: "./assets/icons/ukladka_icon.png" },
-  ];
-  */
 
   const getCoef = (price) => {
     const barberRank = values.barber.rank;

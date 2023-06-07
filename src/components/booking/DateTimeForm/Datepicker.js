@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import moment from 'moment';
 import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
 import uk from "date-fns/locale/uk";

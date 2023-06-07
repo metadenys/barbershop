@@ -1,9 +1,14 @@
 import './barbers_table.scss';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup'
 import { useTable } from "react-table";
+import * as Yup from 'yup'
+import axios from 'axios';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+import FormData from 'form-data'
 
+/*
 const testDataBarbers = [
     {
         name: "DENYS",
@@ -24,8 +29,23 @@ const testDataBarbers = [
         photoUrl: "../assets/img/third_barber.jpg",
     }
 ]
-
+*/
 function AddBarberModal() {
+
+    const [ranksData, setRanksData] = useState([])
+
+    useEffect(() => {
+        const fetchRanksData = async () => {
+            try {
+                const response = await axios.get('https://localhost:5001/api/v1/ranks');
+                setRanksData(response.data.data)
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchRanksData();
+    }, []);
 
     const [isWindowOpen, setIsWindowOpen] = useState(false);
 
@@ -44,17 +64,34 @@ function AddBarberModal() {
             .required('*Обов\'язкове поле'),
         rank: Yup.string()
             .required('*Обов\'язкове поле'),
-        photo: Yup.mixed()
-            .required("*Обов'язкове поле"),
         bio: Yup.string()
             .min(4, 'Опис занадто короткий!')
             .max(50, 'Опис занадто довгий!')
             .required('*Обов\'язкове поле')
     });
 
-    const PhotoInputComponent = (props) => (
-        <input className="add_barber_photo_input" type="file" {...props} accept="image/png, image/jpeg, image/jpg" />
-    );
+    const serverUrl = "https://localhost:5001/api/v1/barbers"
+
+    const handleSubmit = async (values, { setSubmitting }) => {
+        if (!values.photo) {
+            setSubmitting(false);
+            return;
+        }
+        const form = new FormData();
+        form.append('FirstName', values.name);
+        form.append('Description', values.bio);
+        form.append('Photo', values.photo, values.photo.name);
+        form.append('RankId', values.rank);
+        const notifyError = () => toast.error("Упс!Щось пішло не так...")
+        const notifySuccess = () => {
+            toast.success("Успішно!");
+            closeWindow()
+        }
+
+        await axios.post(serverUrl, form)
+            .then(() => notifySuccess())
+            .catch(() => notifyError())
+    };
 
     return (
         <div>
@@ -65,18 +102,14 @@ function AddBarberModal() {
                     <div className="modal">
                         <Formik
                             initialValues={{
-                                name: '',
-                                rank: '',
-                                bio: '',
-                                photo: undefined,
+                                name: "",
+                                rank: "",
+                                bio: "",
+                                file: undefined
                             }}
-                            onSubmit={async (values) => {
-                                await new Promise((r) => setTimeout(r, 500));
-                                alert(JSON.stringify(values, null, 2));
-                                closeWindow();
-                            }}
+                            onSubmit={handleSubmit}
                             validationSchema={validationSchema}
-                        >
+                        >{({ setFieldValue }) => (
                             <Form>
                                 <div className='add_barber_form'>
                                     <div className='add_barber_form_title'>Додати барбера</div>
@@ -93,9 +126,10 @@ function AddBarberModal() {
                                             <label htmlFor="rank">Ранг:</label>
                                             <Field as="select" id="rank" name="rank">
                                                 <option value="">Виберіть ранг</option>
-                                                <option value="Silver">Silver</option>
-                                                <option value="Gold">Gold</option>
-                                                <option value="Platinum">Platinum</option>
+                                                {ranksData.map((rank) => (
+                                                    <option key={rank.id} value={rank.id}>
+                                                        {rank.status}
+                                                    </option>))}
                                             </Field>
                                         </div>
                                         <ErrorMessage name="rank" component="div" className="error_add_barber" />
@@ -103,10 +137,19 @@ function AddBarberModal() {
 
                                     <div>
                                         <div className='barber_add_input'>
-                                            <label htmlFor="photo">Фото:</label>
-                                            <Field name="photo" id="photo" as={PhotoInputComponent} />
+                                            <label htmlFor="file">Фото:</label>
+                                            <input
+                                                id='file'
+                                                name="file"
+                                                type="file"
+                                                onChange={(event) => {
+                                                    const file = event.currentTarget.files[0];
+                                                    setFieldValue("photo", file);
+                                                }}
+                                                accept='.jpg, .png'
+                                            />
                                         </div>
-                                        <ErrorMessage name="photo" component="div" className="error_add_barber" />
+                                        <div className='error_add_barber'>*Обов'язкове фото в форматі .jpg або .png</div>
                                     </div>
 
                                     <div>
@@ -123,6 +166,7 @@ function AddBarberModal() {
                                     <button onClick={closeWindow} className='add_barber_button'>Скасувати</button>
                                 </div>
                             </Form>
+                        )}
                         </Formik>
                     </div>
                 </div>
@@ -133,32 +177,31 @@ function AddBarberModal() {
 
 function BarbersTable() {
 
-    /*
-const [barbersData, setBarbersData] = useState([]);
+    const [barbersResponseData, setBarbersResponseData] = useState([]);
 
-useEffect(() => {
     const fetchBarbersData = async () => {
-    try {
-        const response = await axios.get('https://localhost:5001/api/v1/barbers');
-        const transformedData = response.data.data.map(barber => ({
-        id: barber.id.toString(),
-        name: barber.firstName,
-        bio: barber.description,
-        rank: barber.rank.status,
-        photo: barber.photoUrl,
-        }));
-        console.log(transformedData);
-        setBarbersData(transformedData);
-    } catch (error) {
-        console.error('Error fetching barbers:', error);
-    }
+        try {
+            const response = await axios.get('https://localhost:5001/api/v1/barbers'); //URL
+            const transformedData = response.data.data.map(barber => ({
+                id: barber.id,
+                name: barber.firstName,
+                bio: barber.description,
+                rank: barber.rank.status,
+                photoUrl: barber.photoUrl
+            }));
+            setBarbersResponseData(transformedData);
+        } catch (error) {
+            console.error('Error fetching barbers:', error);
+        }
     };
 
-    fetchBarbersData();
-}, []);
-*/
+    useEffect(() => {
 
-    const barbersData = useMemo(() => testDataBarbers, [])
+        fetchBarbersData();
+
+    }, []);
+
+    const barbersData = useMemo(() => barbersResponseData, [barbersResponseData])
 
     const columns = useMemo(() => [
         {
@@ -220,6 +263,18 @@ useEffect(() => {
             <div className='table_buttons_container'>
                 <AddBarberModal />
             </div>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                draggable={false}
+                closeOnClick
+                pauseOnHover={false}
+                pauseOnFocusLoss={false}
+                rtl={false}
+                theme="light"
+            />
         </div>
     )
 }

@@ -72,7 +72,7 @@ function Navbar() {
       case "barbers":
         setNavText("Про нас");
         setNavUrl("#about_us");
-        setNavText2("Сервіси");
+        setNavText2("Послуги");
         setNavUrl2("#services");
         break;
       case "services":
