@@ -114,7 +114,6 @@ function BookingsTable() {
     const fetchBookingsData = async () => {
         try {
             const response = await axios.get(`https://localhost:5001/api/v1/bookings/date?Date=${formatDateToGet(selectedDate)}`); //URL
-            console.log(response.data.data)
             const transformedData = response.data.data.map(booking => ({
                 id: booking.id,
                 barberName: booking.barber.firstName,
@@ -199,7 +198,6 @@ function BookingsTable() {
         if (values.status !== "Скасовано") {
             setSelectedBookingId(values.id)
             setSelectedBookingStatus(values.status)
-            console.log(values.id)
         } else {
             setSelectedBookingId(null)
         }

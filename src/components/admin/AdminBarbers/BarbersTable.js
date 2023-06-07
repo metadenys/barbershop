@@ -8,28 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import FormData from 'form-data'
 
-/*
-const testDataBarbers = [
-    {
-        name: "DENYS",
-        rank: "silver",
-        bio: "Test Bio",
-        photoUrl: "../assets/img/first_barber.jpg",
-    },
-    {
-        name: "MAX",
-        rank: "gold",
-        bio: "Test Bio",
-        photoUrl: "../assets/img/second_barber.jpg",
-    },
-    {
-        name: "ARTHUR",
-        rank: "platinum",
-        bio: "Test Bio",
-        photoUrl: "../assets/img/third_barber.jpg",
-    }
-]
-*/
 function AddBarberModal() {
 
     const [ranksData, setRanksData] = useState([])
