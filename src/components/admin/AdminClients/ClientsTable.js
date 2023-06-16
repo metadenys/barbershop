@@ -1,136 +1,7 @@
 import './clients_table.scss';
 import {  useMemo, useState, useEffect } from 'react';
-import axios from "axios";
 import { useTable } from "react-table";
-/*
-const testDataClients = [
-    {
-        name: "DENYS ZAHRAI",
-        phoneNumber: "0937540055",
-        email: "denzagray@gmail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    },
-    {
-        name: "TEST CLIENT",
-        phoneNumber: "0930001122",
-        email: "mail@mail.com"
-    }
-]
-*/
+import { mainInterceptor } from '../../../services/axiosInterceptor/axiosInterceptor';
 
 function ClientsTable() {
     
@@ -138,7 +9,7 @@ function ClientsTable() {
 
     const fetchClientsData = async () => {
         try {
-            const response = await axios.get('https://localhost:5001/api/v1/clients');
+            const response = await mainInterceptor.get('clients');
             const transformedData = response.data.data.map(client => ({
                 id: client.id,
                 name: client.name,

@@ -24,7 +24,6 @@ function MyTimePicker({ handleSelectTime, values }) {
         const fetchHoursData = async (barberId, date) => {
             try {
                 const response = await axios.get(`https://localhost:5001/api/v1/bookings/busy/${barberId}?Date=${date}`);
-                console.log(response.data.data);
                 const transformedData = response.data.data.map(time => ({
                     time: DateTimeTransforming(time.time),
                 }));

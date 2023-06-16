@@ -3,10 +3,10 @@ import { useMemo, useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useTable } from "react-table";
 import * as Yup from 'yup'
-import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import FormData from 'form-data'
+import { mainInterceptor } from '../../../services/axiosInterceptor/axiosInterceptor';
 
 function AddBarberModal() {
 
@@ -15,7 +15,7 @@ function AddBarberModal() {
     useEffect(() => {
         const fetchRanksData = async () => {
             try {
-                const response = await axios.get('https://localhost:5001/api/v1/ranks');
+                const response = await mainInterceptor.get('ranks');
                 setRanksData(response.data.data)
             } catch (error) {
                 console.error(error);
@@ -42,13 +42,14 @@ function AddBarberModal() {
             .required('*Обов\'язкове поле'),
         rank: Yup.string()
             .required('*Обов\'язкове поле'),
+        barber_password: Yup.string()
+            .min(4, 'Пароль занадто короткий!')
+            .required('*Обов\'язкове поле'),
         bio: Yup.string()
             .min(4, 'Опис занадто короткий!')
             .max(50, 'Опис занадто довгий!')
             .required('*Обов\'язкове поле')
     });
-
-    const serverUrl = "https://localhost:5001/api/v1/barbers"
 
     const handleSubmit = async (values, { setSubmitting }) => {
         if (!values.photo) {
@@ -60,13 +61,14 @@ function AddBarberModal() {
         form.append('Description', values.bio);
         form.append('Photo', values.photo, values.photo.name);
         form.append('RankId', values.rank);
+        form.append('Password', values.barber_password);
         const notifyError = () => toast.error("Упс!Щось пішло не так...")
         const notifySuccess = () => {
             toast.success("Успішно!");
             closeWindow()
         }
 
-        await axios.post(serverUrl, form)
+        await mainInterceptor.post("barbers", form)
             .then(() => notifySuccess())
             .catch(() => notifyError())
     };
@@ -83,6 +85,7 @@ function AddBarberModal() {
                                 name: "",
                                 rank: "",
                                 bio: "",
+                                barber_password: "Barber_1",
                                 file: undefined
                             }}
                             onSubmit={handleSubmit}
@@ -130,6 +133,14 @@ function AddBarberModal() {
                                         <div className='error_add_barber'>*Обов'язкове фото в форматі .jpg або .png</div>
                                     </div>
 
+                                    {/* <div>
+                                        <div className='barber_add_input'>
+                                            <label htmlFor="barber_password">Пароль:</label>
+                                            <Field type="text" id="barber_password" name="barber_password" autoComplete="off"/>
+                                        </div>
+                                        <ErrorMessage name="barber_password" component="div" className="error_add_barber" />
+                                    </div> */}
+
                                     <div>
                                         <div className='barber_add_input'>
                                             <label htmlFor="bio">Опис:</label>
@@ -159,7 +170,7 @@ function BarbersTable() {
 
     const fetchBarbersData = async () => {
         try {
-            const response = await axios.get('https://localhost:5001/api/v1/barbers'); //URL
+            const response = await mainInterceptor.get('https://localhost:5001/api/v1/barbers'); //URL
             const transformedData = response.data.data.map(barber => ({
                 id: barber.id,
                 name: barber.firstName,

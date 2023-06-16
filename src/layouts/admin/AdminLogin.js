@@ -1,18 +1,44 @@
 import './admin_login.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+import { mainInterceptor } from '../../services/axiosInterceptor/axiosInterceptor';
+import { useState } from 'react';
+import { Loader } from '../../App';
 
 function AdminLogin() {
 
+    const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
+
     const validationSchema = Yup.object().shape({
-        username: Yup.string()
+        email: Yup.string()
             .required('*Введіть ім\'я користувача'),
         password: Yup.string()
             .required('*Введіть пароль'),
     });
 
-    console.log(process.env.REACT_APP_URL)
+    const notifyError = () => toast.error("Невірно введені дані!")
+
+    const handleSubmit = async (values) => {
+        setLoading(true)
+        await mainInterceptor.post("auth/sign-in", values)
+            .then((response) => {
+                let token = response.data.data.accessToken
+                localStorage.setItem('token', token)
+                navigate('/admin/main')
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+            .catch(() => {
+                notifyError();
+            })
+    }
+
+    if(loading) return <Loader />
 
     return (
         <div className='admin_login'>
@@ -37,20 +63,17 @@ function AdminLogin() {
                     <div className='admin_form_container'>
                         <Formik
                             initialValues={{
-                                username: "",
+                                email: "",
                                 password: ""
                             }}
-                            onSubmit={async (values) => {
-                                await new Promise((resolve) => setTimeout(resolve, 500));
-                                alert(JSON.stringify(values, null, 2));
-                            }}
+                            onSubmit={handleSubmit}
                             validationSchema={validationSchema}
                         >
                             <Form>
-                                <label htmlFor="username">ІМ'Я КОРИСТУВАЧА</label>
+                                <label htmlFor="email">ІМ'Я КОРИСТУВАЧА</label>
                                 <div className="data_input_field">
-                                    <Field type="username" id="username" name="username" />
-                                    <ErrorMessage name="username" component="div" className="error_message" />
+                                    <Field type="email" id="email" name="email" />
+                                    <ErrorMessage name="email" component="div" className="error_message" />
                                 </div>
 
                                 <label htmlFor="password">ПАРОЛЬ</label>
@@ -65,6 +88,18 @@ function AdminLogin() {
                     </div>
                 </div>
             </div>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                draggable={false}
+                closeOnClick
+                pauseOnHover={false}
+                pauseOnFocusLoss={false}
+                rtl={false}
+                theme="light"
+            />
             <footer>©2023, Zahrai Denys</footer>
         </div>
     );

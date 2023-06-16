@@ -1,0 +1,18 @@
+.admin_not_found {
+    background: rgb(8, 9, 10);
+    background: linear-gradient(rgba(33, 37, 39, 1) 0%, rgba(8, 9, 10, 1) 100%);
+}
+
+.admin_not_found_content {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page_not_found_text {
+    font-size: 22px;
+    color: white;
+    text-align: center;
+}

@@ -8,6 +8,7 @@ import uk from "date-fns/locale/uk";
 import axios from 'axios';
 import dayjs from 'dayjs';
 import 'dayjs/locale/uk';
+import { mainInterceptor } from '../../../services/axiosInterceptor/axiosInterceptor';
 
 registerLocale("uk", uk);
 
@@ -113,7 +114,7 @@ function BookingsTable() {
     }
     const fetchBookingsData = async () => {
         try {
-            const response = await axios.get(`https://localhost:5001/api/v1/bookings/date?Date=${formatDateToGet(selectedDate)}`); //URL
+            const response = await mainInterceptor.get(`bookings/date?Date=${formatDateToGet(selectedDate)}`); //URL
             const transformedData = response.data.data.map(booking => ({
                 id: booking.id,
                 barberName: booking.barber.firstName,
@@ -225,7 +226,7 @@ function BookingsTable() {
                 Id: selectedBookingId,
                 status: status
             }
-            await axios.patch('https://localhost:5001/api/v1/bookings/update', statusChangeObj);
+            await mainInterceptor.patch('bookings/update', statusChangeObj);
         } catch (error) {
             console.error('Error patching booking:', error);
         }
